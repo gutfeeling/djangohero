@@ -13,5 +13,8 @@ setup(name = "djangohero",
       include_package_data = True,
       author_email = "dibyachakravorty@gmail.com",
       entry_points={
-          "console_scripts": ["djangohero = djangohero.djangohero:main"]}
+          "console_scripts": ["djangohero = djangohero.djangohero:main"]},
+      install_requires=[
+          "Django == 1.10.4",
+      ],
 )
