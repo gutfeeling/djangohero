@@ -113,7 +113,12 @@ Works on both Python 2 and 3.
 
 ### Requirements
 
-You should have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed for this to work.
+You should have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and Git installed for this to work. You need
+to logged into Heroku at the time of running djangohero. You can login to Heroku by using the following command.
+
+```
+heroku login
+```
 
 ### Additional comments
 
