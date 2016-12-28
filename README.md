@@ -60,25 +60,27 @@ Installing djangohero will make the program `djangohero` available on your syste
 ### Syntax
 
 ```
-djangohero deploy --app=<app_name> --region=<region> --database --database_type=<database_type> --python=<python_version> --container_name=<container_folder_name> <django_project_name>
+djangohero deploy --app=<app_name> --region=<region> --scale=<scale> --database --database_type=<database_type> --python=<python_version> --container_name=<container_folder_name> <django_project_name>
 ```
 
 ### Explanation of options, flags and arguments
 
---app : name of the Heroku app; if absent, uses Heroku's imaginative app names
+**--app** : Name of the Heroku app; defaults to Heroku's imaginative app names.
 
---region : [Geographical location of the app](https://devcenter.heroku.com/articles/regions)
+**--region** : [Geographical location of the app](https://devcenter.heroku.com/articles/regions); defaults to us.
 
---database : If this flag is present, a [database](https://devcenter.heroku.com/articles/heroku-postgresql) is created
+**--scale** : [Scale of the dynos](https://devcenter.heroku.com/articles/scaling); defaults to 1.
 
---database_type : [name of the Heroku Postgres' plan tier](https://devcenter.heroku.com/articles/heroku-postgres-plans#plan-tiers)
+**--database** : If this flag is present, a [database](https://devcenter.heroku.com/articles/heroku-postgresql) is created.
 
---python : [Python runtime (either 2 or 3)](https://devcenter.heroku.com/articles/python-runtimes#supported-python-runtimes);
-the default is Python 3
+**--database_type** : [Name of the Heroku Postgres' plan tier](https://devcenter.heroku.com/articles/heroku-postgres-plans#plan-tiers); defaults to hobby-dev.
 
---container_name : Name of the container folder. If this option is absent, it uses the app name.
+**--python** : [Python runtime (either 2 or 3)](https://devcenter.heroku.com/articles/python-runtimes#supported-python-runtimes);
+defaults to Python 3.
 
-django_project_name : Name of the Django project
+**--container_name** : Name of the container folder; defaults to app name.
+
+**django_project_name** : Name of the Django project.
 
 ## Folder structure of the app
 
@@ -107,7 +109,7 @@ container_name
 ```
 
 ### Compatibility
-It should work on both Python 2 and 3.
+Works on both Python 2 and 3.
 
 ### Requirements
 
@@ -124,7 +126,7 @@ and it doesn't try to automate the other command line things. But it might fit y
 If you think similar stuff can be done for other languages that work on Heroku, we could create a unified project containing all the code. 
 Drop me a line at dibyachakravorty@gmail.com
 
-Finally, your contributions and suggestions to improve the process are most welcome. 
+Finally, your contributions and suggestions to improve this project is most welcome. 
 
 
 
