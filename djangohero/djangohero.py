@@ -20,6 +20,23 @@ class DjangoHero(object):
                                   "whitenoise==3.2\n"
                                   "Unipath==1.1")
 
+    def create_root_directory(self, direction):
+        if direction == "execute":
+            if self.args.container_name is None and self.args.app is None:
+                raise ValueError("app_name and container_name cannot both be"
+                    " empty.")
+            elif self.args.container_name is None:
+                self.container_name = self.args.app
+            else:
+                self.container_name = self.args.container_name
+            os.makedirs(self.container_name)
+            os.chdir(self.container_name)
+            print("Created container folder.")
+        elif direction == "revert":
+            os.chdir("..")
+            shutil.rmtree(self.container_name)
+            print("Deleted container folder.")
+
     def initialize_git(self, direction):
         if direction == "execute":
             try:
@@ -31,8 +48,7 @@ class DjangoHero(object):
                 print("Could not initialize a git repo. Is git installed?")
                 raise(e)
         elif direction == "revert":
-            shutil.rmtree(".git")
-            print("Removed .git folder permanently.")
+            pass
 
     def create_django_project_from_template(self, direction):
         if direction == "execute":
@@ -47,8 +63,7 @@ class DjangoHero(object):
                       " accessible?")
                 raise(e)
         elif direction == "revert":
-            shutil.rmtree(self.args.django_project_name)
-            print("Removed the Django project.")
+            pass
 
     def create_requirements_file_and_procfile(self, direction):
         if direction == "execute":
@@ -61,9 +76,7 @@ class DjangoHero(object):
                     )
             print("Created requirements file and Procfile.")
         elif direction == "revert":
-            os.remove("requirements.txt")
-            os.remove("Procfile")
-            print("Removed requirements file and Procfile.")
+            pass
 
     def create_runtime_file(self, direction):
         if direction == "execute":
@@ -75,6 +88,8 @@ class DjangoHero(object):
                     runtime_file.write("python-2.7.13")
             else:
                 raise ValueError("Python version can be 2 or 3.")
+        if direction == "revert":
+            pass
 
     def app_exists(self, app_name):
         try:
@@ -104,7 +119,8 @@ class DjangoHero(object):
             print(line_with_url.strip())
             return self.get_app_name(line_with_url)
         except subprocess.CalledProcessError as e:
-            print("Could not create the Heroku app.")
+            print("Could not create the Heroku app. Is your quota full"
+                " or the name taken?")
             raise(e)
 
     def create_heroku_app(self, direction):
@@ -121,39 +137,29 @@ class DjangoHero(object):
                 self.app_name = self.create_app(command)
             else:
                 print("Heroku app with that name exists. Skipping creation.")
+                command = ["heroku", "git:remote", "-a", self.app_name]
+                output_bytestring = subprocess.check_output(command)
                 self.delete_app_on_error = False
 
         elif direction == "revert":
             if self.delete_app_on_error:
                 command = ["heroku", "apps:destroy", "--app", self.app_name,
                            "--confirm", self.app_name]
-                try:
-                    output_bytestring = subprocess.check_output(command)
-                except subprocess.CalledProcessError:
-                    print("Could not delete app {0}."
-                          " Please delete it manually".format(self.app_name))
+                output_bytestring = subprocess.check_output(command)
 
     def add_django_settings_module_config_var(self, direction):
         if direction == "execute":
-            try:
-                output_bytestring = subprocess.check_output(
-                    ["heroku", "config:set", "DJANGO_SETTINGS_MODULE"
-                     "={0}.settings.settings_heroku".format(
-                        self.args.django_project_name)]
-                    )
-                print(output_bytestring.decode("utf-8").strip())
-            except subprocess.CalledProcessError as e:
-                print("Could not set the DJANGO_SETTINGS_MODULE config var")
-                raise(e)
+            output_bytestring = subprocess.check_output(
+                ["heroku", "config:set", "DJANGO_SETTINGS_MODULE"
+                 "={0}.settings.settings_heroku".format(
+                    self.args.django_project_name)]
+                )
+            print(output_bytestring.decode("utf-8").strip())
 
         elif direction == "revert":
-            try:
-                command = ["heroku", "config:unset", "DJANGO_SETTINGS_MODULE"]
-                output_bytestring = subprocess.check_output(command)
-            except subprocess.CalledProcessError:
-                print("Could not remove config var DJANGO_SETTINGS_MODULE from"
-                      " app {0}. Please remove it manually".format(
-                          self.app_name))
+            command = ["heroku", "config:unset", "DJANGO_SETTINGS_MODULE"]
+            output_bytestring = subprocess.check_output(command)
+
 
 
     def add_secret_key_config_var(self, direction):
@@ -161,46 +167,38 @@ class DjangoHero(object):
             secret_key = "".join([random.SystemRandom().choice(
                 "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)")
                 for i in range(50)])
-            try:
-                output_bytestring = subprocess.check_output(["heroku",
-                    "config:set", "DJANGO_SECRET_KEY={0}".format(secret_key)])
-                print(output_bytestring.decode("utf-8").strip())
-            except (FileNotFoundError, OSError) as e:
-                print("Could not find the Heroku CLI. Is it installed?")
-                raise(e)
-            except subprocess.CalledProcessError as e:
-                print("Could not set the DJANGO_SECRET_KEY config var")
-                raise(e)
+            output_bytestring = subprocess.check_output(["heroku",
+                "config:set", "DJANGO_SECRET_KEY={0}".format(secret_key)])
+            print(output_bytestring.decode("utf-8").strip())
         elif direction == "revert":
-            try:
-                command = ["heroku", "config:unset", "DJANGO_SECRET_KEY"]
-                output_bytestring = subprocess.check_output(command)
-            except subprocess.CalledProcessError:
-                print("Could not remove config var DJANGO_SECRET_KEY from"
-                      " app {0}. Please remove it manually".format(
-                          self.app_name))
+            command = ["heroku", "config:unset", "DJANGO_SECRET_KEY"]
+            output_bytestring = subprocess.check_output(command)
+
+    def database_exists(self):
+        command = ["heroku", "config:get", "DATABASE_URL"]
+        output_bytestring = subprocess.check_output(command)
+        output = output_bytestring.decode("utf-8")
+        if output.strip() != "":
+            return True
+        return False
 
     def create_database(self, direction):
-        if direction == "execute":
-            if self.args.database:
-                try:
-                    command = ["heroku", "addons:create",
-                               "heroku-postgresql:{0}".format(
-                                   self.args.database_type)]
-                    output_bytestring = subprocess.check_output(command)
-                    output= output_bytestring.decode("utf-8")
-                    print(output.strip())
-                except subprocess.CalledProcessError as e:
-                    print("Could not provision database")
-                    raise(e)
-        elif direction == "revert":
-            try:
-                command = ["heroku", "addons:destroy", "DATABASE", "--confirm",
-                            self.app_name]
+        if self.args.database:
+            if direction == "execute":
+                if self.database_exists():
+                    raise ValueError("You cannot use the --database flag"
+                        " if a database already exists")
+                command = ["heroku", "addons:create",
+                           "heroku-postgresql:{0}".format(
+                                self.args.database_type)]
                 output_bytestring = subprocess.check_output(command)
-            except subprocess.CalledProcessError as e:
-                print("Could not remove database. Please remove it manually.")
-                raise(e)
+                output= output_bytestring.decode("utf-8")
+                print(output.strip())
+
+            elif direction == "revert":
+                command = ["heroku", "addons:destroy", "DATABASE",
+                           "--confirm", self.app_name]
+                output_bytestring = subprocess.check_output(command)
 
 
     def add_allowed_hosts_settings_var(self, direction):
@@ -217,49 +215,40 @@ class DjangoHero(object):
                 heroku_settings_file.write(newline)
             print("Added alllowed host to settings file.")
         elif direction == "revert":
-            with open("{0}/{0}/settings/settings_heroku.py".format(
-                self.args.django_project_name), "r") as heroku_settings_file:
-                lines = heroku_settings_file.readlines()
-            with open("{0}/{0}/settings/settings_heroku.py".format(
-                self.args.django_project_name), "w") as heroku_settings_file:
-                heroku_settings_file.writelines(lines[:-1])
-            print("Removed allowed host from settings file.")
+            pass
 
-    def commit_changes_to_git(self, direction):
+    def commit_changes_to_git_and_push(self, direction):
         if direction == "execute":
             try:
                 command1 = ["git", "add", "."]
                 command2 = ["git", "commit", "-m", "First commit"]
+                command3 = ["git", "push", "heroku", "master"]
                 output1_bytestring = subprocess.check_output(command1)
                 output2_bytestring = subprocess.check_output(command2)
-                print("Commited changes to git.")
+                output3_bytestring = subprocess.check_output(command3)
+                print("Commited changes to git and pushed to Heroku.")
             except subprocess.CalledProcessError as e:
-                print("Could not commit changes")
-                raise(e)
-        elif direction == "revert":
-            try:
-                command = ["git", "update-ref", "-d", "HEAD"]
-                output_bytestring = subprocess.check_output(command)
-                print("Removed the git commit.")
-            except subprocess.CalledProcessError:
-                print("Could not revert changes")
-
-    def push_to_heroku(self, direction):
-        #raise Exception
-        if direction == "execute":
-            try:
-                command = ["git", "push", "heroku", "master"]
-                output_bytestring = subprocess.check_output(command)
-                print("\nYour app is now live on Heroku!.".format(
-                    self.app_name))
-            except subprocess.CalledProcessError as e:
-                print("Could not push changes to Heroku")
+                print("Could not commit changes and push to Heroku."
+                      " Did some data already exist in the app?")
                 raise(e)
         elif direction == "revert":
             pass
 
+    def scale_app(self, direction):
+        if direction == "execute":
+            command = ["heroku", "ps:scale", "web={0}".format(
+                self.args.scale)]
+            output_bytestring = subprocess.check_output(command)
+            print("\nYour app is now live on Heroku!.".format(
+                self.app_name))
+            os.chdir("..")
+        elif direction == "revert":
+            pass
+
+
     def deploy(self):
-        self.pipeline = [self.initialize_git,
+        self.pipeline = [self.create_root_directory,
+                         self.initialize_git,
                          self.create_django_project_from_template,
                          self.create_requirements_file_and_procfile,
                          self.create_runtime_file,
@@ -268,8 +257,8 @@ class DjangoHero(object):
                          self.add_secret_key_config_var,
                          self.create_database,
                          self.add_allowed_hosts_settings_var,
-                         self.commit_changes_to_git,
-                         self.push_to_heroku]
+                         self.commit_changes_to_git_and_push,
+                         self.scale_app]
         for step in range(len(self.pipeline)):
             try:
                 self.pipeline[step]("execute")
@@ -303,6 +292,8 @@ deploy_parser.add_argument("--template",
 deploy_parser.add_argument("--database", action = "store_true")
 deploy_parser.add_argument("--database_type", default = "hobby-dev")
 deploy_parser.add_argument("--python", default = "3")
+deploy_parser.add_argument("--container_name", default = None)
+deploy_parser.add_argument("--scale", default = "1")
 deploy_parser.add_argument("django_project_name")
 
 deploy_parser.set_defaults(func = deploy)
