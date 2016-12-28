@@ -8,7 +8,7 @@ so that you can start working on your project immediately without worrying about
 
 ## Example
 
-To start a functional Heroku app called my_app running an empty Django project called my_django_project complete with a 
+To start a functional Heroku app called `my_app` running an empty Django project called `my_django_project` complete with a 
 database, you need just one line.
 
 ```
@@ -114,7 +114,7 @@ Works on both Python 2 and 3.
 ### Requirements
 
 You should have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and Git installed for this to work. You need
-to logged into Heroku at the time of running djangohero. You can login to Heroku by using the following command.
+to logged into Heroku at the time of running `djangohero`. You can login to Heroku by using the following command.
 
 ```
 heroku login
