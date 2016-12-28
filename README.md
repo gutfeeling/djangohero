@@ -65,22 +65,22 @@ djangohero deploy --app=<app_name> --region=<region> --scale=<scale> --database 
 
 ### Explanation of options, flags and arguments
 
---app : name of the Heroku app; defaults to Heroku's imaginative app names
+**--app** : Name of the Heroku app; defaults to Heroku's imaginative app names.
 
---region : [Geographical location of the app](https://devcenter.heroku.com/articles/regions); defaults to us
+**--region** : [Geographical location of the app](https://devcenter.heroku.com/articles/regions); defaults to us.
 
---scale : [scale of the dynos](https://devcenter.heroku.com/articles/scaling); defaults to 1
+**--scale** : [Scale of the dynos](https://devcenter.heroku.com/articles/scaling); defaults to 1.
 
---database : If this flag is present, a [database](https://devcenter.heroku.com/articles/heroku-postgresql) is created
+**--database** : If this flag is present, a [database](https://devcenter.heroku.com/articles/heroku-postgresql) is created.
 
---database_type : [name of the Heroku Postgres' plan tier](https://devcenter.heroku.com/articles/heroku-postgres-plans#plan-tiers); defaults to hobby-dev
+**--database_type** : [Name of the Heroku Postgres' plan tier](https://devcenter.heroku.com/articles/heroku-postgres-plans#plan-tiers); defaults to hobby-dev.
 
---python : [Python runtime (either 2 or 3)](https://devcenter.heroku.com/articles/python-runtimes#supported-python-runtimes);
-defaults to Python 3
+**--python** : [Python runtime (either 2 or 3)](https://devcenter.heroku.com/articles/python-runtimes#supported-python-runtimes);
+defaults to Python 3.
 
---container_name : Name of the container folder; defaults to app name
+**--container_name** : Name of the container folder; defaults to app name.
 
-django_project_name : Name of the Django project
+**django_project_name** : Name of the Django project.
 
 ## Folder structure of the app
 
