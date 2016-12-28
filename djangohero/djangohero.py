@@ -8,6 +8,11 @@ import random
 import shutil
 import os
 
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = OSError    
+
 class DjangoHero(object):
 
     def __init__(self, args):
@@ -44,7 +49,7 @@ class DjangoHero(object):
                 output_bytestring = subprocess.check_output(command)
                 output= output_bytestring.decode("utf-8")
                 print(output.strip())
-            except (FileNotFoundError, OSError) as e:
+            except FileNotFoundError as e:
                 print("Could not initialize a git repo. Is git installed?")
                 raise(e)
         elif direction == "revert":
@@ -58,7 +63,7 @@ class DjangoHero(object):
                     "--name=Procfile", self.args.django_project_name]
                 output_bytestring = subprocess.check_output(command)
                 print("Created Django project from specified template.")
-            except (FileNotFoundError, OSError) as e:
+            except FileNotFoundError as e:
                 print("Could not create Django project. Is Django installed and"
                       " accessible?")
                 raise(e)
