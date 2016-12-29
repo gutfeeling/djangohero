@@ -108,10 +108,19 @@ container_name
 └── runtime.txt
 ```
 
-### Compatibility
+## A note about migrations
+
+Because of the project structure, you need to execute the following commands for migrations
+
+```
+heroku run django_project_name/manage.py makemigrations
+heroku run django_project_name/manage.py migrate
+```
+
+## Compatibility
 Works on both Python 2 and 3.
 
-### Requirements
+## Requirements
 
 You should have the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and Git installed for this to work. You need
 to logged into Heroku at the time of running `djangohero`. You can login to Heroku by using the following command.
@@ -120,7 +129,7 @@ to logged into Heroku at the time of running `djangohero`. You can login to Hero
 heroku login
 ```
 
-### Additional comments
+## Additional comments
 
 There's another project called [heroku-django-template](https://github.com/heroku/heroku-django-template) that provides a 
 Heroku template. It does not fit my use case as the template 
