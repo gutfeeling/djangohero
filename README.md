@@ -1,23 +1,28 @@
-#DjangoHero : Django and Heroku for lazy humans
+#DjangoHero
 <img src="https://github.com/gutfeeling/djangohero/blob/master/logo/djangohero.png" alt="djangohero logo" width="200">
 
 ## Description
 
-DjangoHero automates the process of starting a new Django project on Heroku. It sets everything up for you, 
-so that you can start working on your project immediately without worrying about Heroku specific details.
+Starting a Django project using DjangoHero will 
+
+1. Set up the Django project using best practices.
+2. Make the Django project live on the cloud (Heroku) immediately.
+3. Provision a database on the cloud (Heroku postgres) and connect your appication to it.
+
+Best part : all of this happens with a single command under a minute without any input from your side. This is as good as plug and play gets.
 
 ## Example
 
 To start a Heroku app called `my_app` running an empty Django project called `my_django_project`, complete with a 
-database, you need a single commnd.
+database, we need to run the following command. Try it out, it works like a charm.
 
 ```
 djangohero deploy --app=my_app --database my_django_project
 ```
 
-## Why?
+## Why is this useful?
 
-Creating a Django app on Heroku usually requires the following steps (you don't have to read all of them):
+Creating a Django app on Heroku usually requires the following steps (you don't have to read all of them, just notice how many there are):
 
 1. Create a Django project using `django-admin startproject`.
 2. Modify the Django project to conform to best practices outlined in 
@@ -29,22 +34,21 @@ Creating a Django app on Heroku usually requires the following steps (you don't 
 6. Create the heroku app.
 7. Add the app url to `ALLOWED_HOSTS` in the Django settings.
 8. Set heroku config vars for `DJANGO_SETTINGS_MODULE` and `DJANGO_SECRET_KEY`. If you are using best practices for Django,
-you'd need these.
+ you'd need these.
 9. Create `requirements.txt` containing required Python packages.
 10. Create a `Procfile` containing information on the web process and `runtime.txt` containing information on the
-preferred Python runtime.
+ preferred Python runtime.
 11. Create a Heroku Postgres addon to set up a database.
 12. Commit the changes to Git and push the changes to Heroku.
 13. Scale the app.
 
-I end up wasting a lot of time doing these things before I can actually start working on writing actual code. 
-This is frustrating. This package solves the problem by automating the setup process. 
+These boring steps have to be repeated for every project before we can get it to go live on the cloud. This package solves the problem by automating the setup process and making the application live on the cloud from birth. 
 
 ## Installation
 
 The following steps are recommended.
 
-###Git clone the project
+###Git clone this repo
 ```
 git clone https://github.com/gutfeeling/djangohero.git
 ```
@@ -87,7 +91,7 @@ defaults to Python 3.
 The created app uses the following folder structure for the Django project in accordance with 
 [Two Scoops of Django](https://www.twoscoopspress.com/products/two-scoops-of-django-1-8) and 
 Heroku's requirements. The folder structure can be 
-changed without much trouble as well.
+changed without much trouble as well by changing the template.
 ```
 container_name
 ├── django_project_name
