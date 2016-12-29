@@ -3,9 +3,9 @@
 
 ## Description
 
-Starting a Django project using DjangoHero will 
+DjangoHero is the fastest way to set up a Django project on the cloud (using Heroku). Starting a Django project using DjangoHero will 
 
-1. Set up the Django project using best practices.
+1. Set up the Django project with a folder structure that follows best practices.
 2. Make the Django project live on the cloud (Heroku) immediately.
 3. Provision a database on the cloud (Heroku postgres) and connect your appication to it.
 
