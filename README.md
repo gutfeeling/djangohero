@@ -8,8 +8,8 @@ so that you can start working on your project immediately without worrying about
 
 ## Example
 
-To start a functional Heroku app called `my_app` running an empty Django project called `my_django_project` complete with a 
-database, you need just one line.
+To start a Heroku app called `my_app` running an empty Django project called `my_django_project`, complete with a 
+database, you need a single commnd.
 
 ```
 djangohero deploy --app=my_app --database my_django_project
@@ -17,7 +17,7 @@ djangohero deploy --app=my_app --database my_django_project
 
 ## Why?
 
-Creating a Django app on Heroku usually requires the following steps:
+Creating a Django app on Heroku usually requires the following steps (you don't have to read all of them):
 
 1. Create a Django project using `django-admin startproject`.
 2. Modify the Django project to conform to best practices outlined in 
@@ -40,9 +40,9 @@ preferred Python runtime.
 I end up wasting a lot of time doing these things before I can actually start working on writing actual code. 
 This is frustrating. This package solves the problem by automating the setup process. 
 
-## Setup
+## Installation
 
-Set it up like any other Python package. In particular, you can use the following steps.
+The following steps are recommended.
 
 ###Git clone the project
 ```
