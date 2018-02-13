@@ -11,7 +11,7 @@ import os
 try:
     FileNotFoundError
 except NameError:
-    FileNotFoundError = OSError    
+    FileNotFoundError = OSError
 
 class DjangoHero(object):
 
@@ -21,7 +21,7 @@ class DjangoHero(object):
         self.requirements_text = ("dj-database-url==0.4.1\n"
                                   "Django==1.10.4\n"
                                   "gunicorn==19.6.0\n"
-                                  "psycopg2==2.6.2\n"
+                                  "psycopg2==2.7.4\n"
                                   "whitenoise==3.2\n"
                                   "Unipath==1.1")
 
